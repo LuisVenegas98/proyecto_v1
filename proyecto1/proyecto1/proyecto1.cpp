@@ -1,12 +1,14 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
-#include <windows.h> //Segun con esto puedo hacer lineas de distintos colores
+#include <windows.h> //Segun con esto puedo hacer lineas de distintos colores. Edit: pos si
 
 using namespace std;
 
+
 int listIntFl = 1;
 int menu, x = 0, cl;
+bool b = false;
 string sn;
 
 //Tablas para los articulos
@@ -14,10 +16,9 @@ int **listInt = new int*[listIntFl];
 float** listFl = new float*[listIntFl];
 string** listStr = new string*[listIntFl];
 
-//HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE); 
-
 void agregar()
 {
+    b = true;
     do
     {
         listInt[x][0] = x + 1; //Numero del articulo
@@ -90,11 +91,11 @@ void agregar()
         cout << "\nGenero del juego:\n";                //Genero del juego
         cin >> listStr[x][4];
 
-        cout << "\nIngrese el precio unitario:\n";      //valor del juego
+        cout << "\nIngrese el precio unitario:\n";      //Valor del juego
         cin >> listFl[x][0];
         
-        listFl[x][1] = listFl[x][0] * .16;            //cuanto es de impuestos
-        listFl[x][2] = listFl[x][0] + listFl[x][1];   // total con impuestos
+        listFl[x][1] = listFl[x][0] * .16;            //Cuanto es de impuestos
+        listFl[x][2] = listFl[x][0] + listFl[x][1];   //Total con impuestos
         
         do 
         {
@@ -105,8 +106,7 @@ void agregar()
 
             if (sn != "s" && sn != "n")
             {
-                //system("color 04");
-                cout << "\033[0;4 Error: esa no es una opcion\n";
+                cout << "Error: esa no es una opcion\n";
             }
 
         } while (sn != "s" && sn != "n");
@@ -122,28 +122,77 @@ void agregar()
 
 void modificar()
 {
-    cout << "modificando cita";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+    cout << "                        Paimon\n";
+    for (int i = 1; i <= 56; i++)
+    {
+        cout << "\xC4";
+    }
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+    cout << " \n \xA8Qu\x82 tal si exploramos el \xA0rea de adelante m\xA0s tarde? \n";
 }
 void eliminar()
 {
-    cout << "eliminando cita";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+    cout << "                        Paimon\n";
+    for (int i = 1; i <= 56; i++)
+    {
+        cout << "\xC4";
+    }
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+    cout << " \n \xA8Qu\x82 tal si exploramos el \xA0rea de adelante m\xA0s tarde? \n";
 }
 void lista()
 {
-    system("color 03");
+    if (b == false) // validar si hay registros
+    {
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+        cout << "Aun no hay juegos registrados.\n" << "Presiona enter para continuar...";
+        return;
+    }
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
     cout << "No.\t\t";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+    cout << "Nombre del videojuego\t\t";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+    cout << "A\xA4o de lanzamiento\t\t";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+    cout << "Clasificacion\t\t";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+    cout << "Caracteristicas\t\t";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+    cout << "Descripcion\t\t";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+    cout << "Genero\t\t";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+    cout << "Precio unitario\t\t";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+    cout << "Impuesto (16\x25)\t\t";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+    cout << "Total\t\t\n\n";
+
     for (int i = 0; i < x; i++)
     {
-        cout << listInt[i][0] << " ! " <<
-        listStr[i][0] << " ! " <<
-        listInt[i][1] << " ! " <<
-        listStr[i][1] << " ! " <<
-        listStr[i][2] << " ! " <<
-        listStr[i][3] << " ! " <<
-        listStr[i][4] << " ! " <<
-        listFl[i][0] << " ! " <<
-        listFl[i][1] << " ! " <<
-        listFl[i][2];
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+        cout << listInt[i][0] << " \xB3 "; //Numero del articulo
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+        cout << listStr[i][0] << " \xB3 "; //Nombre del videojuego
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+        cout << listInt[i][1] << " \xB3 "; //Año de lanzamiento
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+        cout << listStr[i][1] << " \xB3 "; //Escribir caracteristicas
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+        cout << listStr[i][2] << " \xB3 "; //Escribir descripcion
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+        cout << listStr[i][3] << " \xB3 "; //Genero del juego
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+        cout << listStr[i][4] << " \xB3 "; //Valor del juego
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+        cout << listFl[i][0] << " \xB3 ";  //Precio unitario
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+        cout << listFl[i][1] << " \xB3 ";  //Impuestos
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+        cout << listFl[i][2];              //Total con impuestos
         cout << "\n";
     }
 }
@@ -216,7 +265,7 @@ void main()
         default:
         {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-            cout  << "Error: esa no es una opcion... presiona enter para continuar\n";
+            cout  << "Error: esa no es una opcion.\n" << "Presiona enter para continuar...\n";
             system("pause>null");
             break;
         }
