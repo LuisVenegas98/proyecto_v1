@@ -1,9 +1,10 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
-#include <windows.h> //Segun con esto puedo hacer lineas de distintos colores. Edit: pos si
+#include <windows.h> 
 #include <iomanip>
 #include <conio.h>
+#include <fstream>
 
 using namespace std;
 
@@ -80,6 +81,241 @@ void lista(int y, int j)
     }
 }
 
+void blocN(int y, int j)
+{
+    string listaJuegos = "Videojuegos.txt";
+    ofstream fichero; //fichero solo de salida.
+
+    //abrimos el fichero
+    fichero.open(listaJuegos.c_str()); //Esto es un puntero que apunta en que parte estamos dentro del fichero. Es como cuando pinchas con el raton en una parte del mismo para indicar que escriba en el. Hay metodos de cambiar este cursor pero no vienen al caso te dejaré videos al final.
+
+    if (b == false) // validar si hay registros
+    {
+        fichero << "No hay juegos registrados.";
+        return;
+    }
+
+    fichero << " ID  | ";
+    fichero << "Nombre del videojuego     | ";
+    fichero << "Año de lanza. | ";
+    fichero << "Clasf | ";
+    fichero << left << setw(40) << "Caracteristicas" << setfill(' ') << " | ";
+    fichero << left << setw(50) << "Descripcion" << setfill(' ') << " | ";
+    fichero << left << setw(30) << "Genero" << setfill(' ') << " | ";
+    fichero << "Precio  | ";
+    fichero << "Impuesto (16\x25)  | ";
+    fichero << "Total    | \n\n\n";
+
+
+    for (int i = j; i < y; i++)
+    {
+        fichero << " " << left << setw(3) << listInt[i][0] << setfill(' ') << " | "; //Numero del articulo
+        fichero << left << setw(25) << listStr[i][0] << setfill(' ') << " | "; //Nombre del videojuego
+        fichero << left << setw(13) << listInt[i][1] << setfill(' ') << " | "; //Año de lanzamiento
+        fichero << left << setw(5) << listStr[i][1] << setfill(' ') << " | "; //Clasificacion
+        fichero << left << setw(40) << listStr[i][2] << setfill(' ') << " | "; //Caracteristicas
+        fichero << left << setw(50) << listStr[i][3] << setfill(' ') << " | "; //Descripcion
+        fichero << left << setw(30) << listStr[i][4] << setfill(' ') << " | "; //Genero del juego
+        fichero << left << "$" << setw(6) << listFl[i][0] << setfill(' ') << " | ";  //Precio unitario
+        fichero << left << "$" << setw(14) << listFl[i][1] << setfill(' ') << " | ";  //Impuestos
+        fichero << left << "$" << setw(7) << listFl[i][2] << setfill(' ') << " | ";  //Total con impuestos
+        fichero << "\n\n";
+    }
+
+    //antes de salir cerramos el fichero
+    fichero.close();
+}
+
+//registros
+void nombreJ(int k)
+{
+    int c = 0;
+    color(11);
+    cout << "Ingrese el nombre del juego:\n";       //Nombre del videojuego
+    color(15);
+    cin.ignore();
+    getline(cin, listStr[k][0]);
+    c = listStr[k][0].length();
+    if (c > 25)
+    {
+        listStr[k][0].erase(listStr[k][0].begin() + 25, listStr[k][0].end());
+    }
+}
+
+void anioJ(int k)
+{
+    color(11);
+    cout << "\nIngrese el a\xA4o de lanzamineto:\n";  //Año de lanzamiento
+    do
+    {
+        color(15);
+        cin >> listInt[k][1];
+
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore();
+            listInt[k][1] = 0;
+        }
+
+        if (listInt[k][1] < 1950 || listInt[k][1] > 2050)
+        {
+            color(12);
+            cout << "\x1b[1A" << "\x1b[2K";
+            cout << "\rError: esa no es una fecha valida.\n";
+        }
+    } while (listInt[k][1] < 1950 || listInt[k][1] > 2050);
+}
+
+void clasJ(int k)
+{
+    color(11);
+    cout << "\nClasificacion del juego\n";     //clasificacion
+    color(3);
+    cout << "[1]. Todos (E)\n" <<
+        "[2]. Todos +10 (E10+)\n" <<
+        "[3]. Adolescentes (T)\n" <<
+        "[4]. Maduro +17 (M)\n" <<
+        "[5]. Solo Adultos +18 (A)\n" <<
+        "[6]. Aun sin calificar (RP)\n";
+
+    int e = 0;
+
+    do
+    {
+        color(15);
+        cl = _getche() - '0';
+        cout << endl;
+
+        switch (cl)
+        {
+        case 1:
+        {
+            listStr[k][1] = "E";
+            break;
+        }
+        case 2:
+        {
+            listStr[k][1] = "E10+";
+            break;
+        }
+        case 3:
+        {
+            listStr[k][1] = "T";
+            break;
+        }
+        case 4:
+        {
+            listStr[k][1] = "M";
+            break;
+        }
+        case 5:
+        {
+            listStr[k][1] = "A";
+            break;
+        }
+        case 6:
+        {
+            listStr[k][1] = "RP";
+            break;
+        }
+        default:
+        {
+            color(12);
+            cout << "\x1b[1A" << "\x1b[2K";
+            cout << "\rError: Esa no es una opcion\n";
+            e++;
+        }
+        }
+    } while (cl <= 0 || cl >= 7);
+
+    if (e > 0)
+    {
+        for (int i = 0; i <= e; i++)
+        {
+            cout << "\x1b[1A" << "\x1b[2K";
+        }
+        cout << cl << endl;
+    }
+}
+
+void caracJ(int k)
+{
+    int c = 0;
+    color(11);
+    cout << "\nCaracteristicas del juego:\n";       //Escribir caracteristicas
+    cin.ignore();
+    color(15);
+    getline(cin, listStr[k][2]);
+    c = listStr[k][2].length();
+    if (c > 40)
+    {
+        listStr[k][2].erase(listStr[k][2].begin() + 40, listStr[k][2].end());
+    }
+}
+
+void descJ(int k)
+{
+    int c = 0;
+    color(11);
+    cout << "\nDescripcion del juego:\n";           //Escribir descripcion
+    color(15);
+    cin.ignore();
+    getline(cin, listStr[k][3]);
+    c = listStr[k][3].length();
+    if (c > 50)
+    {
+        listStr[k][3].erase(listStr[k][3].begin() + 50, listStr[k][3].end());
+    }
+}
+
+void generoJ(int k)
+{
+    int c = 0;
+    color(11);
+    cout << "\nGenero del juego:\n";                //Genero del juego
+    color(15);
+    cin.ignore();
+    getline(cin, listStr[k][4]);
+    c = listStr[k][4].length();
+    if (c > 30)
+    {
+        listStr[k][4].erase(listStr[k][4].begin() + 30, listStr[k][4].end());
+    }
+}
+
+void precioJ(int k)
+{
+    color(11);
+    cout << "\nIngrese el precio unitario:\n";      //Valor del juego
+    color(15);
+
+    do
+    {
+        color(15);
+        cin >> listFl[k][0];
+
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore();
+            listFl[k][0] = -1;
+        }
+
+        if (listFl[k][0] < 0)
+        {
+            color(12);
+            cout << "\x1b[1A" << "\x1b[2K";
+            cout << "\rError: ese no es un presio valido.\n";
+        }
+    } while (listFl[k][0] < 0);
+
+    listFl[k][1] = listFl[k][0] * .16;            //Cuanto es de impuestos
+    listFl[k][2] = listFl[k][0] + listFl[k][1];   //Total con impuestos
+}
+
+
+//Menu principal
 void agregar()
 {
     b = true;
@@ -90,138 +326,20 @@ void agregar()
         system("cls");
         listInt[x][0] = x + 1; //Numero del articulo
 
-        color(11);
-        cout << "Ingrese el nombre del juego:\n";       //Nombre del videojuego
-        color(15);
-        cin.ignore();
-        getline(cin, listStr[x][0]);
-        c = listStr[x][0].length();
-        if (c > 25)
-        {
-            listStr[x][0].erase(listStr[x][0].begin() + 25, listStr[x][0].end());
-        }
+        nombreJ(x);
 
-
-        color(11);
-        cout << "\nIngrese el a\xA4o de lanzamineto:\n";  //Año de lanzamiento
-        do
-        {
-            string fecha;
-            color(15);
-            cin >> fecha;
-            listInt[x][2] = stoi(fecha);
-
-            if (cin.fail())
-            {
-                cin.clear();
-                cin.ignore();
-                listInt[x][1] = 0;
-            }
-
-            if (listInt[x][1] < 1950)
-            {
-                color(12);
-                cout << "\rError: esa no es una fecha valida.\n";
-            }
-        } while (listInt[x][1] < 1950);
+        anioJ(x);
         
+        clasJ(x);
+        
+        caracJ(x);
 
-        color(11);
-        cout << "\nClasificacion del juego\n";     //clasificacion
-        color(3);
-        cout << "[1]. Todos (E)\n" <<
-            "[2]. Todos +10 (E10+)\n" <<
-            "[3]. Adolescentes (T)\n" <<
-            "[4]. Maduro +17 (M)\n" <<
-            "[5]. Solo Adultos +18 (A)\n" <<
-            "[6]. Aun sin calificar (RP)\n";
+        descJ(x);
 
-        do
-        {
-            color(15);
-            cl = _getche() - '0';
+        generoJ(x);
 
-            switch (cl)
-            {
-            case 1:
-            {
-                listStr[x][1] = "E";
-                break;
-            }
-            case 2:
-            {
-                listStr[x][1] = "E10+";
-                break;
-            }
-            case 3:
-            {
-                listStr[x][1] = "T";
-                break;
-            }
-            case 4:
-            {
-                listStr[x][1] = "M";
-                break;
-            }
-            case 5:
-            {
-                listStr[x][1] = "A";
-                break;
-            }
-            case 6:
-            {
-                listStr[x][1] = "RP";
-                break;
-            }
-            default:
-            {
-                color(12);
-                cout << "\rError: Esa no es una opcion\n";
-            }
-            }
-        } while (cl <= 0 || cl >= 7);
-
-        color(11);
-        cout << "\nCaracteristicas del juego:\n";       //Escribir caracteristicas
-        cin.ignore();
-        color(15);
-        getline(cin, listStr[x][2]);
-        c = listStr[x][2].length();
-        if (c > 40)
-        {
-            listStr[x][2].erase(listStr[x][2].begin() + 40, listStr[x][2].end());
-        }
-
-        color(11);
-        cout << "\nDescripcion del juego:\n";           //Escribir descripcion
-        color(15);
-        cin.ignore();
-        getline(cin, listStr[x][3]);
-        c = listStr[x][3].length();
-        if (c > 50)
-        {
-            listStr[x][3].erase(listStr[x][3].begin() + 50, listStr[x][3].end());
-        }
-
-        color(11);
-        cout << "\nGenero del juego:\n";                //Genero del juego
-        color(15);
-        cin.ignore();
-        getline(cin, listStr[x][4]);
-        c = listStr[x][4].length();
-        if (c > 30)
-        {
-            listStr[x][4].erase(listStr[x][4].begin() + 30, listStr[x][4].end());
-        }
-
-        color(11);
-        cout << "\nIngrese el precio unitario:\n";      //Valor del juego
-        color(15);
-        cin >> listFl[x][0];
-
-        listFl[x][1] = listFl[x][0] * .16;            //Cuanto es de impuestos
-        listFl[x][2] = listFl[x][0] + listFl[x][1];   //Total con impuestos
-
+        precioJ(x);
+        
         system("cls");
         color(10);
         cout << "Juego agregado con exito! \1\n";
@@ -229,8 +347,8 @@ void agregar()
         {
             color(11);
             cout << "Desea agregar otro juego? si[s] no[n]\n";
-            color(15);
-            cin >> sn;
+            cin.ignore();
+            sn = _getch();
 
             sn.erase(sn.begin() + 1, sn.end());
 
@@ -256,19 +374,20 @@ void modificar()
 {
     do
     {
+        int cat = 0;
         system("cls");
         if (b == false) // validar si hay registros
         {
             color(14);
-            cout << "Aun no hay juegos registrados. Presiona una tecla para continuar...";
+            cout << "No hay juegos registrados. Presiona una tecla para continuar...";
             system("pause>n");
             return;
         }
 
         lista(x, 0);
 
-        color(11);
-        cout << "Ingrese el ID del juego que desea modifar. Salir[0]\n";
+        color(10);
+        cout << "Ingresa el ID del juego que desea modificar. Salir[0]\n";
         color(15);
         cin >> mod;
 
@@ -285,21 +404,70 @@ void modificar()
             {
                 system("cls");
                 lista(mod, mod - 1);
-
                 color(11);
-                cout << "Qu\x82 desea modificar?\n";
-                color(10);
-                cout << "\t[1]. Nombre del videojuego\n" <<
-                    "\t[2]. Modificar juego\n" <<
-                    "\t[3]. A\xA4o de lanzamiento\n" <<
-                    "\t[4]. Clasficacion\n" <<
-                    "\t[5]. Caracteristicas\n" <<
-                    "\t[6]. Descripcion\n" <<
-                    "\t[7]. Genero\n" <<
-                    "\t[0]. Salir\n";
-                color(15);
-                cin >> menu;
-            } while (menu != 0);
+                cout << "Que desesa modificar?\n";
+                color(3);
+                cout << "[1]. Nombre del juego\n" <<
+                    "[2]. A\xA4o de lanzamineto:\n" <<
+                    "[3]. Clasificacion del juego\n" <<
+                    "[4]. Caracteristicas del juego\n" <<
+                    "[5]. Descripcion del juego\n" <<
+                    "[6]. Precio unitario\n" <<
+                    "[0]. Regresar\n";
+
+                cat = _getch() - '0';
+
+                switch (cat)
+                {
+                case 1:
+                {
+                    system("cls");
+                    nombreJ(mod - 1);
+                    break;
+                }
+                case 2:
+                {
+                    system("cls");
+                    anioJ(mod - 1);
+                    break;
+                }
+                case 3:
+                {
+                    system("cls");
+                    clasJ(mod - 1);
+                    break;
+                }
+                case 4:
+                {
+                    system("cls");
+                    caracJ(mod - 1);
+                    break;
+                }
+                case 5:
+                {
+                    system("cls");
+                    descJ(mod - 1);
+                    break;
+                }
+                case 6:
+                {
+                    system("cls");
+                    precioJ(mod - 1);
+                    break;
+                }
+                case 0:
+                {
+                    break;
+                }
+                default:
+                {
+                    color(12);
+                    cout << "\x1b[1A" << "\x1b[2K";
+                    cout << "\rError: Esa no es una opcion\n";
+                }
+                }
+            } while (cl < 0 || cl >= 7);
+
         }
 
         else if (mod != 0)
@@ -307,7 +475,12 @@ void modificar()
             system("cls");
             color(12);
             cout << "Error: no existe un juego con ese ID. Presiona una tecla para continuar";
-            system("pause>n");
+            system("pause>null");
+        }
+
+        if (x == 0)
+        {
+            b = false;
         }
     } while (mod != 0);
 }
@@ -452,6 +625,7 @@ void main()
         }
         case 0:
         {
+            blocN(x, 0);
             cout << "Saliendo del sistema";
             for (int i = 0; i < 3; i++)
             {
